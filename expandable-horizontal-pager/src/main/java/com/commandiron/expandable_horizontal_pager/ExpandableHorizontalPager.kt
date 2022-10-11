@@ -38,12 +38,13 @@ fun ExpandableHorizontalPager(
     key: ((page: Int) -> Any)? = null,
     userScrollEnabled: Boolean = true,
     initialWidth: Dp = 200.dp,
-    targetWidth: Dp = 400.dp,
+    targetWidth: Dp = 300.dp,
     aspectRatio: Float = 2/3f,
     durationMillis: Int = 400,
     mainContent: @Composable ColumnScope.(page: Int, expanded: Boolean) -> Unit,
     overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
+    hiddenContentBoxHeight: Dp = Dp.Unspecified,
     hiddenContent: @Composable ColumnScope.(page: Int) -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -108,8 +109,17 @@ fun ExpandableHorizontalPager(
             contentOffSetYState =
                 -((maxHeight - (contentWidthState * 1 / aspectRatio)) / 2)
 
-            boxHeightState = maxHeight - targetWidth * 1 / aspectRatio
-            boxOffSetYState = (contentWidthState * 1 / aspectRatio) / 2
+            boxHeightState = if(hiddenContentBoxHeight == Dp.Unspecified) {
+                maxHeight - targetWidth * 1 / aspectRatio
+            } else {
+                hiddenContentBoxHeight
+            }
+
+            boxOffSetYState = if(hiddenContentBoxHeight == Dp.Unspecified) {
+                (maxHeight - (maxHeight - targetWidth * 1 / aspectRatio)) / 2
+            } else {
+                - maxHeight / 2 + hiddenContentBoxHeight / 2 + targetWidth * 1 / aspectRatio
+            }
 
             cornerSizeState = 0.dp
         } else {
@@ -153,9 +163,8 @@ fun ExpandableHorizontalPager(
                     contentColor = Color.White
                 )
             ) {
-                Column(
+                BoxWithConstraints(
                     modifier = Modifier
-                        .padding(16.dp)
                         .drawWithContent {
                             if (isAnimationFinished) {
                                 drawContent()
@@ -166,11 +175,12 @@ fun ExpandableHorizontalPager(
                             state = rememberDraggableState {},
                             onDragStarted = { expand(this@BoxWithConstraints.maxHeight) }
                         ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    contentAlignment = Alignment.Center
                 ) {
-                    if(expanded) {
-                        hiddenContent(page)
+                    Column() {
+                        if(expanded) {
+                            hiddenContent(page)
+                        }
                     }
                 }
             }

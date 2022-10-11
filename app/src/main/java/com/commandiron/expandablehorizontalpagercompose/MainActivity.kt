@@ -76,7 +76,9 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         hiddenContent = { page ->
-                            HiddenContent(page)
+                            Column(Modifier.padding(16.dp)) {
+                                HiddenContent(page)
+                            }
                         }
                     )
                 }
