@@ -3,8 +3,6 @@ package com.commandiron.expandablehorizontalpagercompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -22,7 +20,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -53,7 +50,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     ExpandableHorizontalPager(
                         count = films.size,
-                        initialWidth = 240.dp,
                         targetWidth = maxWidth,
                         mainContent = { page, expanded ->
                             AsyncImage(

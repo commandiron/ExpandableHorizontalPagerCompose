@@ -37,7 +37,7 @@ fun ExpandableHorizontalPager(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     key: ((page: Int) -> Any)? = null,
     userScrollEnabled: Boolean = true,
-    initialWidth: Dp = 120.dp,
+    initialWidth: Dp = 200.dp,
     targetWidth: Dp = 400.dp,
     aspectRatio: Float = 2/3f,
     durationMillis: Int = 400,
