@@ -60,8 +60,6 @@ dependencyResolutionManagement {
 3. Add dependency
 ```groovy
 dependencies {
-        implementation 'com.github.commandiron:WheelPickerCompose:1.0.10'
+        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.0'
 }
 ```
-
-## Features
