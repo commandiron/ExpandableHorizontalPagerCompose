@@ -7,17 +7,37 @@ Add Expandable Horizontal Pager in Android Jetpack Compose.
 ## Usage
 
 ```kotlin
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        // add jitpack here 👇🏽
-        maven { url 'https://jitpack.io' }
-       ...
+ExpandableHorizontalPager(
+    count = films.size,
+    targetWidth = maxWidth,
+    mainContent = { page, expanded ->
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(films[page].imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.FillHeight
+        )
+    },
+    overMainContentExpanded = { page ->
+        OverMainContentExpanded(
+            title = "Details",
+            imageVector = Icons.Default.KeyboardArrowDown
+        )
+    },
+    overMainContentCollapsed = { page ->
+        OverMainContentExpanded(
+            title = "Close",
+            imageVector = Icons.Default.KeyboardArrowUp,
+            iconOnTop = true
+        )
+    },
+    hiddenContent = { page ->
+        HiddenContent(page)
     }
-} 
-...
+)
 ```
 
 
