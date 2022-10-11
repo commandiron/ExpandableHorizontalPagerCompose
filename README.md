@@ -1,4 +1,4 @@
-# ExpandableHorizontalPagerCompose  [![](https://jitpack.io/v/commandiron/WheelPickerCompose.svg)](https://jitpack.io/#commandiron/WheelPickerCompose)
+# ExpandableHorizontalPagerCompose  [![](https://jitpack.io/v/commandiron/ExpandableHorizontalPagerCompose.svg)](https://jitpack.io/#commandiron/ExpandableHorizontalPagerCompose)
 
 Add Expandable Horizontal Pager in Android Jetpack Compose.
 
