@@ -6,8 +6,6 @@ Add Expandable Horizontal Pager in Android Jetpack Compose.
 
 <img src="art/expandable_horizontal_pager.gif" width="250" height="530">
 
-<img src="https://user-images.githubusercontent.com/50905347/195033320-37f03013-eefe-4f1c-9b72-adb8097dae48.gif" width="250" height="530">
-
 ## Usage
 
 ```kotlin
