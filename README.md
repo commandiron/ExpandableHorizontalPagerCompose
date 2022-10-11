@@ -2,7 +2,23 @@
 
 Add Expandable Horizontal Pager in Android Jetpack Compose.
 
+## How it looks
+
 ## Usage
+
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // add jitpack here 👇🏽
+        maven { url 'https://jitpack.io' }
+       ...
+    }
+} 
+...
+```
 
 
 ## Setup
