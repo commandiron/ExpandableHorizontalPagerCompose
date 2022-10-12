@@ -52,7 +52,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     ExpandableHorizontalPager(
                         count = films.size,
-                        initialHorizontalPadding = 80.dp,
+                        initialHorizontalPadding = 64.dp,
+                        initialWidth = 240.dp,
                         targetWidth = maxWidth,
                         mainContent = { page ->
                             AsyncImage(
@@ -79,9 +80,10 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         hiddenContent = { page ->
-                            Column(Modifier.padding(16.dp)) {
-                                HiddenContent(page)
-                            }
+                            HiddenContent(
+                                title = films[page].title,
+                                overview = films[page].overview
+                            )
                         }
                     )
                 }
@@ -139,10 +141,12 @@ fun OverMainContent(
 }
 
 @Composable
-fun HiddenContent(page: Int) {
-    Text(text = films[page].title)
-    Spacer(Modifier.height(8.dp))
-    Text(text = films[page].overview)
+fun HiddenContent(title: String, overview: String) {
+    Column(Modifier.padding(16.dp)) {
+        Text(text = title)
+        Spacer(Modifier.height(8.dp))
+        Text(text = overview)
+    }
 }
 
 data class Film(
