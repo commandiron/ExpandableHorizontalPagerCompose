@@ -11,7 +11,8 @@ Add Expandable Horizontal Pager in Android Jetpack Compose.
 ```kotlin
 ExpandableHorizontalPager(
     count = films.size,
-    initialHorizontalPadding = 80.dp,
+    initialHorizontalPadding = 64.dp,
+    initialWidth = 240.dp,
     targetWidth = maxWidth,
     mainContent = { page ->
         AsyncImage(
