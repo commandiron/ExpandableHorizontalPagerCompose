@@ -18,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -49,15 +48,25 @@ fun ExpandableHorizontalPager(
     targetWidth: Dp = 300.dp,
     aspectRatio: Float = 2/3f,
     durationMillis: Int = 400,
-    mainContent: @Composable ColumnScope.(page: Int, expanded: Boolean) -> Unit,
+    mainContent: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
     hiddenContent: @Composable ColumnScope.(page: Int) -> Unit
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var state by rememberSaveable { mutableStateOf(ExpandablePagerState.INITIAL) }
 
-    var isAnimationFinished by remember { mutableStateOf(false) }
+    fun animationFinish(expandablePagerState: ExpandablePagerState) {
+        when (expandablePagerState) {
+            ExpandablePagerState.INITIAL_TO_TARGET -> {
+                state = ExpandablePagerState.TARGET
+            }
+            ExpandablePagerState.TARGET_TO_INITIAL -> {
+                state = ExpandablePagerState.INITIAL
+            }
+            else -> {}
+        }
+    }
 
     val contentOffSetXState by remember { mutableStateOf(0.dp) }
     val contentOffSetX by animateDpAsState(
@@ -80,7 +89,10 @@ fun ExpandableHorizontalPager(
         targetValue = contentWidthState,
         animationSpec = tween(
             durationMillis = durationMillis
-        )
+        ),
+        finishedListener = {
+            animationFinish(state)
+        }
     )
 
     var boxHeightState by remember { mutableStateOf(0.dp) }
@@ -99,7 +111,7 @@ fun ExpandableHorizontalPager(
             durationMillis = durationMillis
         ),
         finishedListener = {
-            isAnimationFinished = !isAnimationFinished
+            animationFinish(state)
         }
     )
 
@@ -108,7 +120,7 @@ fun ExpandableHorizontalPager(
         targetValue = cornerSizeState,
         animationSpec = tween(
             durationMillis = durationMillis
-        )
+        ),
     )
 
     var horizontalPaddingState by remember { mutableStateOf(initialHorizontalPadding) }
@@ -120,7 +132,10 @@ fun ExpandableHorizontalPager(
     )
 
     fun expand(maxHeight: Dp) {
-        if (!expanded) {
+        if(state == ExpandablePagerState.INITIAL) {
+
+            state = ExpandablePagerState.INITIAL_TO_TARGET
+
             horizontalPaddingState = targetHorizontalPadding
 
             contentWidthState = targetWidth
@@ -139,7 +154,10 @@ fun ExpandableHorizontalPager(
             }
 
             cornerSizeState = 0.dp
-        } else {
+        } else if (state == ExpandablePagerState.TARGET) {
+
+            state = ExpandablePagerState.TARGET_TO_INITIAL
+
             horizontalPaddingState = initialHorizontalPadding
 
             contentWidthState = initialWidth
@@ -150,7 +168,8 @@ fun ExpandableHorizontalPager(
 
             cornerSizeState = 16.dp
         }
-        expanded = !expanded
+
+
     }
 
     HorizontalPager(
@@ -170,15 +189,25 @@ fun ExpandableHorizontalPager(
             Card(
                 modifier = Modifier
                     .width(contentWidth)
-                    .height(if(expanded) boxHeight else 0.dp)
+                    .height(
+                        if (currentPage == page) {
+                            boxHeight
+                        } else {
+                            if(state == ExpandablePagerState.TARGET) {
+                                boxHeight
+                            } else {
+                                0.dp
+                            }
+                        }
+                    )
                     .offset(
                         x = 0.dp,
                         y = boxOffSetY
                     )
                     .graphicsLayer {
-                        if(!expanded) {
+                        if (state != ExpandablePagerState.TARGET) {
                             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-                            if(outerItemScaleEnabled) {
+                            if (outerItemScaleEnabled) {
                                 lerp(
                                     start = outerItemScale,
                                     stop = 1f,
@@ -188,7 +217,7 @@ fun ExpandableHorizontalPager(
                                     scaleY = scale
                                 }
                             }
-                            if(outerItemAlphaEnabled) {
+                            if (outerItemAlphaEnabled) {
                                 alpha = lerp(
                                     start = outerItemAlpha,
                                     stop = 1f,
@@ -205,11 +234,6 @@ fun ExpandableHorizontalPager(
             ) {
                 BoxWithConstraints(
                     modifier = Modifier
-                        .drawWithContent {
-                            if (isAnimationFinished) {
-                                drawContent()
-                            }
-                        }
                         .draggable(
                             orientation = Orientation.Vertical,
                             state = rememberDraggableState {},
@@ -218,7 +242,7 @@ fun ExpandableHorizontalPager(
                     contentAlignment = Alignment.Center
                 ) {
                     Column() {
-                        if(expanded) {
+                        if(state == ExpandablePagerState.TARGET) {
                             hiddenContent(page)
                         }
                     }
@@ -234,9 +258,9 @@ fun ExpandableHorizontalPager(
                         y = contentOffSetY
                     )
                     .graphicsLayer {
-                        if(!expanded) {
+                        if (state != ExpandablePagerState.TARGET) {
                             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-                            if(outerItemScaleEnabled) {
+                            if (outerItemScaleEnabled) {
                                 lerp(
                                     start = outerItemScale,
                                     stop = 1f,
@@ -246,7 +270,7 @@ fun ExpandableHorizontalPager(
                                     scaleY = scale
                                 }
                             }
-                            if(outerItemAlphaEnabled) {
+                            if (outerItemAlphaEnabled) {
                                 alpha = lerp(
                                     start = outerItemAlpha,
                                     stop = 1f,
@@ -272,11 +296,12 @@ fun ExpandableHorizontalPager(
             ) {
                 Box() {
                     Column() {
-                        mainContent(page, expanded)
+                        mainContent(page)
                     }
                     Column() {
                         AnimatedVisibility(
-                            visible = !expanded,
+                            visible = state == ExpandablePagerState.INITIAL ||
+                                    state == ExpandablePagerState.TARGET_TO_INITIAL,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
@@ -301,7 +326,8 @@ fun ExpandableHorizontalPager(
                     }
                     Column() {
                         AnimatedVisibility(
-                            visible = expanded,
+                            visible = state == ExpandablePagerState.TARGET ||
+                                    state == ExpandablePagerState.INITIAL_TO_TARGET,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
@@ -328,4 +354,8 @@ fun ExpandableHorizontalPager(
             }
         }
     }
+}
+
+enum class ExpandablePagerState {
+    INITIAL, INITIAL_TO_TARGET, TARGET_TO_INITIAL, TARGET
 }

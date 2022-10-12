@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         count = films.size,
                         initialWidth = 300.dp,
                         targetWidth = maxWidth,
-                        mainContent = { page, expanded ->
+                        mainContent = { page ->
                             AsyncImage(
                                 modifier = Modifier.fillMaxSize(),
                                 model = ImageRequest.Builder(LocalContext.current)
