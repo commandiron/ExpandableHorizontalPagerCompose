@@ -21,10 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -35,6 +39,10 @@ fun ExpandableHorizontalPager(
     itemSpacing: Dp = 0.dp,
     initialHorizontalPadding: Dp = 64.dp,
     targetHorizontalPadding: Dp = 0.dp,
+    outerItemScaleEnabled: Boolean = true,
+    outerItemScale: Float = 0.85f,
+    outerItemAlphaEnabled: Boolean = true,
+    outerItemAlpha: Float = 0.5f,
     key: ((page: Int) -> Any)? = null,
     userScrollEnabled: Boolean = true,
     initialWidth: Dp = 200.dp,
@@ -146,7 +154,6 @@ fun ExpandableHorizontalPager(
         expanded = !expanded
     }
 
-    var expandedPage by remember { mutableStateOf(0) }
     HorizontalPager(
         count = count,
         modifier = modifier,
@@ -163,24 +170,34 @@ fun ExpandableHorizontalPager(
         ) {
             Card(
                 modifier = Modifier
-                    .width(
-                        if(expandedPage == page) {
-                            contentWidth
-                        } else {
-                            initialWidth
-                        }
-                    )
-                    .height(
-                        if(expandedPage == page) {
-                            boxHeight
-                        } else {
-                            0.dp
-                        }
-                    )
+                    .width(contentWidth)
+                    .height(if(expanded) boxHeight else 0.dp)
                     .offset(
                         x = 0.dp,
                         y = boxOffSetY
-                    ),
+                    )
+                    .graphicsLayer {
+                        if(!expanded) {
+                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+                            if(outerItemScaleEnabled) {
+                                lerp(
+                                    start = outerItemScale,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                ).also { scale ->
+                                    scaleX = scale
+                                    scaleY = scale
+                                }
+                            }
+                            if(outerItemAlphaEnabled) {
+                                alpha = lerp(
+                                    start = outerItemAlpha,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                )
+                            }
+                        }
+                    },
                 shape = RoundedCornerShape(cornerSize),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.Black.copy(0.95f),
@@ -210,35 +227,46 @@ fun ExpandableHorizontalPager(
             }
             Card(
                 modifier = Modifier
-                    .width(
-                        if(expandedPage == page) {
-                            contentWidth
-                        } else {
-                            initialWidth
-                        }
-                    )
-                    .height(
-                        if(expandedPage == page) {
-                            contentWidth * 1 / aspectRatio
-                        } else {
-                            initialWidth * 1 / aspectRatio
-                        }
-                    )
+                    .width(contentWidth)
+                    .height(contentWidth * 1 / aspectRatio)
                     .aspectRatio(aspectRatio)
                     .offset(
-                        x = if(expandedPage == page) contentOffSetX else 0.dp,
-                        y = if(expandedPage == page) contentOffSetY else 0.dp
+                        x = contentOffSetX,
+                        y = contentOffSetY
                     )
+                    .graphicsLayer {
+                        if(!expanded) {
+                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+                            if(outerItemScaleEnabled) {
+                                lerp(
+                                    start = outerItemScale,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                ).also { scale ->
+                                    scaleX = scale
+                                    scaleY = scale
+                                }
+                            }
+                            if(outerItemAlphaEnabled) {
+                                alpha = lerp(
+                                    start = outerItemAlpha,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                )
+                            }
+                        }
+                    }
                     .draggable(
+                        enabled = currentPage == page,
                         orientation = Orientation.Vertical,
                         state = rememberDraggableState {},
                         onDragStarted = {
-                            expandedPage = page
                             expand(maxHeight)
                         }
                     )
-                    .clickable {
-                        expandedPage = page
+                    .clickable(
+                        enabled = currentPage == page,
+                    ) {
                         expand(maxHeight)
                     },
                 shape = RoundedCornerShape(cornerSize)
