@@ -48,6 +48,10 @@ android {
 
 dependencies {
 
+    ext {
+        accompanist_version = '0.26.5-rc'
+    }
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose:compose-compiler:1.0.0-alpha03"
@@ -63,7 +67,8 @@ dependencies {
 
     implementation "io.coil-kt:coil-compose:2.1.0"
 
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.9-beta"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
 
     // implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.0'
     implementation project(':expandable-horizontal-pager')

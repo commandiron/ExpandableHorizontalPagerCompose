@@ -28,10 +28,12 @@ import coil.request.ImageRequest
 import com.commandiron.expandable_horizontal_pager.ExpandableHorizontalPager
 import com.commandiron.expandablehorizontalpagercompose.Film.Companion.films
 import com.commandiron.expandablehorizontalpagercompose.ui.theme.ExpandableHorizontalPagerComposeTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
