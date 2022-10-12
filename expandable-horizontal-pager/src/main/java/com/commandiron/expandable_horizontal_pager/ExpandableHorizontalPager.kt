@@ -36,7 +36,7 @@ fun ExpandableHorizontalPager(
     modifier: Modifier = Modifier,
     reverseLayout: Boolean = false,
     itemSpacing: Dp = 0.dp,
-    initialHorizontalPadding: Dp = 64.dp,
+    initialHorizontalPadding: Dp = 0.dp,
     targetHorizontalPadding: Dp = 0.dp,
     outerItemScaleEnabled: Boolean = true,
     outerItemScale: Float = 0.85f,
@@ -205,8 +205,8 @@ fun ExpandableHorizontalPager(
                         y = boxOffSetY
                     )
                     .graphicsLayer {
+                        val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
                         if (state != ExpandablePagerState.TARGET) {
-                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
                             if (outerItemScaleEnabled) {
                                 lerp(
                                     start = outerItemScale,
@@ -258,8 +258,8 @@ fun ExpandableHorizontalPager(
                         y = contentOffSetY
                     )
                     .graphicsLayer {
+                        val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
                         if (state != ExpandablePagerState.TARGET) {
-                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
                             if (outerItemScaleEnabled) {
                                 lerp(
                                     start = outerItemScale,

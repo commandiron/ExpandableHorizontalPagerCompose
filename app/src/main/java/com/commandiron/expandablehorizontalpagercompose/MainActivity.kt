@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     ExpandableHorizontalPager(
                         count = films.size,
-                        initialWidth = 300.dp,
+                        initialHorizontalPadding = 80.dp,
                         targetWidth = maxWidth,
                         mainContent = { page ->
                             AsyncImage(
