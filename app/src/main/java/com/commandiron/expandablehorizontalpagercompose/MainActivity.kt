@@ -3,6 +3,7 @@ package com.commandiron.expandablehorizontalpagercompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -64,13 +66,13 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         overMainContentExpanded = { page ->
-                            OverMainContentExpanded(
+                            OverMainContent(
                                 title = "Details",
                                 imageVector = Icons.Default.KeyboardArrowDown
                             )
                         },
                         overMainContentCollapsed = { page ->
-                            OverMainContentExpanded(
+                            OverMainContent(
                                 title = "Close",
                                 imageVector = Icons.Default.KeyboardArrowUp,
                                 iconOnTop = true
@@ -89,35 +91,51 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun OverMainContentExpanded(
+fun OverMainContent(
     title: String,
     imageVector: ImageVector,
     iconOnTop: Boolean = false
 ) {
-    if(iconOnTop) {
-        Icon(
-            modifier = Modifier
-                .size(16.dp),
-            imageVector = imageVector,
-            contentDescription = null,
-            tint = Color.White
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        Color.Transparent,
+                        Color.Transparent,
+                        Color.Black.copy(alpha = 0.65f)
+                    )
+                )
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        if(iconOnTop) {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp),
+                imageVector = imageVector,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+        Text(
+            text = title,
+            fontSize = 14.sp,
+            color = Color.White
         )
+        if(!iconOnTop) {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp),
+                imageVector = imageVector,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+        Spacer(Modifier.height(8.dp))
     }
-    Text(
-        text = title,
-        fontSize = 14.sp,
-        color = Color.White
-    )
-    if(!iconOnTop) {
-        Icon(
-            modifier = Modifier
-                .size(16.dp),
-            imageVector = imageVector,
-            contentDescription = null,
-            tint = Color.White
-        )
-    }
-    Spacer(Modifier.height(8.dp))
 }
 
 @Composable
