@@ -124,8 +124,7 @@ fun ExpandableHorizontalPager(
             horizontalPaddingState = targetHorizontalPadding
 
             contentWidthState = targetWidth
-            contentOffSetYState =
-                -((maxHeight - (contentWidthState * 1 / aspectRatio)) / 2)
+            contentOffSetYState = -((maxHeight - (contentWidthState * 1 / aspectRatio)) / 2)
 
             boxHeightState = if(hiddenContentBoxHeight == Dp.Unspecified) {
                 maxHeight - targetWidth * 1 / aspectRatio
