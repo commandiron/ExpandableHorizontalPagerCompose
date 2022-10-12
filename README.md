@@ -38,9 +38,10 @@ ExpandableHorizontalPager(
             iconOnTop = true
         )
     },
-    hiddenContent = { page ->
-        HiddenContent(page)
-    }
+    HiddenContent(
+        title = films[page].title,
+        overview = films[page].overview
+    )
 )
 ```
 
