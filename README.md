@@ -4,7 +4,7 @@ Add Expandable Content (Image etc.) Horizontal Pager in Android Jetpack Compose.
 
 ## How it looks
 
-<img src="art/expandable_horizontal_pager.gif" width="250" height="530">
+<img src="art/expandable_horizontal_pager_2.gif" width="250" height="530">
 
 ## Usage
 
