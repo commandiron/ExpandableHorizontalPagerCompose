@@ -62,9 +62,10 @@ dependencyResolutionManagement {
 ...
 ```
 2. Sync the project
-3. Add dependency
+3. Add dependencies
 ```groovy
 dependencies {
-        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.2'
+        implementation "com.google.accompanist:accompanist-pager:0.26.5-rc"
+        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.3'
 }
 ```
