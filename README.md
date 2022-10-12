@@ -62,7 +62,7 @@ dependencyResolutionManagement {
 ...
 ```
 2. Sync the project
-3. Add dependency
+3. Add dependencies
 ```groovy
 dependencies {
         implementation "com.google.accompanist:accompanist-pager:0.26.5-rc"
