@@ -33,8 +33,8 @@ fun ExpandableHorizontalPager(
     modifier: Modifier = Modifier,
     reverseLayout: Boolean = false,
     itemSpacing: Dp = 0.dp,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    initialHorizontalPadding: Dp = 64.dp,
+    targetHorizontalPadding: Dp = 0.dp,
     key: ((page: Int) -> Any)? = null,
     userScrollEnabled: Boolean = true,
     initialWidth: Dp = 200.dp,
@@ -103,8 +103,18 @@ fun ExpandableHorizontalPager(
         )
     )
 
+    var horizontalPaddingState by remember { mutableStateOf(initialHorizontalPadding) }
+    val horizontalPadding by animateDpAsState(
+        targetValue = horizontalPaddingState,
+        animationSpec = tween(
+            durationMillis = durationMillis
+        )
+    )
+
     fun expand(maxHeight: Dp) {
         if (!expanded) {
+            horizontalPaddingState = targetHorizontalPadding
+
             contentWidthState = targetWidth
             contentOffSetYState =
                 -((maxHeight - (contentWidthState * 1 / aspectRatio)) / 2)
@@ -123,6 +133,8 @@ fun ExpandableHorizontalPager(
 
             cornerSizeState = 0.dp
         } else {
+            horizontalPaddingState = initialHorizontalPadding
+
             contentWidthState = initialWidth
             contentOffSetYState = 0.dp
 
@@ -134,13 +146,13 @@ fun ExpandableHorizontalPager(
         expanded = !expanded
     }
 
+    var expandedPage by remember { mutableStateOf(0) }
     HorizontalPager(
         count = count,
         modifier = modifier,
         reverseLayout = reverseLayout,
         itemSpacing = itemSpacing,
-        contentPadding = contentPadding,
-        verticalAlignment = verticalAlignment,
+        contentPadding = PaddingValues(horizontal = horizontalPadding),
         key = key,
         userScrollEnabled = userScrollEnabled
     ) { page ->
@@ -151,8 +163,20 @@ fun ExpandableHorizontalPager(
         ) {
             Card(
                 modifier = Modifier
-                    .width(contentWidth)
-                    .height(boxHeight)
+                    .width(
+                        if(expandedPage == page) {
+                            contentWidth
+                        } else {
+                            initialWidth
+                        }
+                    )
+                    .height(
+                        if(expandedPage == page) {
+                            boxHeight
+                        } else {
+                            0.dp
+                        }
+                    )
                     .offset(
                         x = 0.dp,
                         y = boxOffSetY
@@ -186,16 +210,37 @@ fun ExpandableHorizontalPager(
             }
             Card(
                 modifier = Modifier
-                    .width(contentWidth)
-                    .height(contentWidth * 1 / aspectRatio)
+                    .width(
+                        if(expandedPage == page) {
+                            contentWidth
+                        } else {
+                            initialWidth
+                        }
+                    )
+                    .height(
+                        if(expandedPage == page) {
+                            contentWidth * 1 / aspectRatio
+                        } else {
+                            initialWidth * 1 / aspectRatio
+                        }
+                    )
                     .aspectRatio(aspectRatio)
-                    .offset(x = contentOffSetX, y = contentOffSetY)
+                    .offset(
+                        x = if(expandedPage == page) contentOffSetX else 0.dp,
+                        y = if(expandedPage == page) contentOffSetY else 0.dp
+                    )
                     .draggable(
                         orientation = Orientation.Vertical,
                         state = rememberDraggableState {},
-                        onDragStarted = { expand(maxHeight) }
+                        onDragStarted = {
+                            expandedPage = page
+                            expand(maxHeight)
+                        }
                     )
-                    .clickable { expand(maxHeight) },
+                    .clickable {
+                        expandedPage = page
+                        expand(maxHeight)
+                    },
                 shape = RoundedCornerShape(cornerSize)
             ) {
                 Box() {
