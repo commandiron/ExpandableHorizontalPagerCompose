@@ -57,7 +57,7 @@ afterEvaluate {
 
                 groupId = 'com.github.commandiron'
                 artifactId = 'expandable-horizontal-pager'
-                version = '1.0.5'
+                version = '1.0.6'
             }
         }
     }
