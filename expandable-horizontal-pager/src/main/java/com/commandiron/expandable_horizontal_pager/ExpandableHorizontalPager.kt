@@ -44,13 +44,14 @@ fun ExpandableHorizontalPager(
     targetWidth: Dp = 300.dp,
     aspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
-    mainContent: @Composable ColumnScope.(page: Int, isExpanded: Boolean) -> Unit,
-    overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
-    overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
+    mainContent: @Composable ColumnScope.(page: Int) -> Unit,
+    overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit = {},
+    overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit = {},
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
     hiddenContentContainerColor: Color = Color.Black,
     hiddenContentContentColor: Color = Color.White,
     hiddenContent: @Composable ColumnScope.(page: Int) -> Unit,
+    onTransform: (isExpanded: Boolean) -> Unit = {}
 ) {
     var transformState by rememberSaveable { mutableStateOf(ExpandablePagerTransformState.INITIAL) }
 
@@ -183,6 +184,8 @@ fun ExpandableHorizontalPager(
                 .fillMaxSize(),
             Alignment.Center
         ) {
+            val isExpanded = transformState == ExpandablePagerTransformState.TARGET ||
+                    transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET
             Card(
                 modifier = Modifier
                     .width(contentWidth)
@@ -230,7 +233,10 @@ fun ExpandableHorizontalPager(
                         .draggable(
                             orientation = Orientation.Vertical,
                             state = rememberDraggableState {},
-                            onDragStarted = { expand(this@BoxWithConstraints.maxHeight) }
+                            onDragStarted = {
+                                onTransform(!isExpanded)
+                                expand(this@BoxWithConstraints.maxHeight)
+                            }
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -277,21 +283,21 @@ fun ExpandableHorizontalPager(
                         orientation = Orientation.Vertical,
                         state = rememberDraggableState {},
                         onDragStarted = {
+                            onTransform(!isExpanded)
                             expand(maxHeight)
                         }
                     )
                     .clickable(
                         enabled = currentPage == page,
                     ) {
+                        onTransform(!isExpanded)
                         expand(maxHeight)
                     },
                 shape = RoundedCornerShape(cornerSize)
             ) {
                 Box() {
-                    val isExpanded = transformState == ExpandablePagerTransformState.TARGET ||
-                            transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET
                     Column() {
-                        mainContent(page, isExpanded)
+                        mainContent(page)
                     }
                     Column() {
                         AnimatedVisibility(

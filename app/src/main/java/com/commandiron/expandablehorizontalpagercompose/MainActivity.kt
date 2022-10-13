@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         initialHorizontalPadding = 64.dp,
                         initialWidth = 240.dp,
                         targetWidth = maxWidth,
-                        mainContent = { page, isExpanded ->
+                        mainContent = { page ->
                             AsyncImage(
                                 modifier = Modifier.fillMaxSize(),
                                 model = ImageRequest.Builder(LocalContext.current)
@@ -86,6 +86,9 @@ class MainActivity : ComponentActivity() {
                                 title = films[page].title,
                                 overview = films[page].overview
                             )
+                        },
+                        onTransform = { isExpanded ->
+                            println(isExpanded)
                         }
                     )
                 }
