@@ -291,10 +291,11 @@ fun ExpandableHorizontalPager(
                     Column() {
                         mainContent(page)
                     }
+                    val isExpand = transformState == ExpandablePagerTransformState.TARGET ||
+                            transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET
                     Column() {
                         AnimatedVisibility(
-                            visible = transformState == ExpandablePagerTransformState.INITIAL ||
-                                    transformState == ExpandablePagerTransformState.TARGET_TO_INITIAL,
+                            visible = !isExpand,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
@@ -303,8 +304,7 @@ fun ExpandableHorizontalPager(
                     }
                     Column() {
                         AnimatedVisibility(
-                            visible = transformState == ExpandablePagerTransformState.TARGET ||
-                                    transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET,
+                            visible = isExpand,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
