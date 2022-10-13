@@ -44,7 +44,7 @@ fun ExpandableHorizontalPager(
     targetWidth: Dp = 300.dp,
     aspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
-    mainContent: @Composable ColumnScope.(page: Int) -> Unit,
+    mainContent: @Composable ColumnScope.(page: Int, isExpanded: Boolean) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
@@ -288,14 +288,14 @@ fun ExpandableHorizontalPager(
                 shape = RoundedCornerShape(cornerSize)
             ) {
                 Box() {
-                    Column() {
-                        mainContent(page)
-                    }
-                    val isExpand = transformState == ExpandablePagerTransformState.TARGET ||
+                    val isExpanded = transformState == ExpandablePagerTransformState.TARGET ||
                             transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET
                     Column() {
+                        mainContent(page, isExpanded)
+                    }
+                    Column() {
                         AnimatedVisibility(
-                            visible = !isExpand,
+                            visible = !isExpanded,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
@@ -304,7 +304,7 @@ fun ExpandableHorizontalPager(
                     }
                     Column() {
                         AnimatedVisibility(
-                            visible = isExpand,
+                            visible = isExpanded,
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
