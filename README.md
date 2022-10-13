@@ -4,7 +4,7 @@ Add Expandable Content (Image etc.) Horizontal Pager in Android Jetpack Compose.
 
 ## How it looks
 
-<img src="art/expandable_horizontal_pager.gif" width="250" height="530">
+<img src="art/expandable_horizontal_pager_2.gif" width="250" height="530">
 
 ## Usage
 
@@ -66,6 +66,6 @@ dependencyResolutionManagement {
 ```groovy
 dependencies {
         implementation "com.google.accompanist:accompanist-pager:0.26.5-rc"
-        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.3'
+        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.4'
 }
 ```
