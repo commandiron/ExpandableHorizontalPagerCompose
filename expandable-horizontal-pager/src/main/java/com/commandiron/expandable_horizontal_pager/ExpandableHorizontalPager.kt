@@ -11,8 +11,7 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -43,13 +42,15 @@ fun ExpandableHorizontalPager(
     userScrollEnabled: Boolean = true,
     initialWidth: Dp = 200.dp,
     targetWidth: Dp = 300.dp,
-    aspectRatio: Float = 2/3f,
+    aspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
     mainContent: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
-    hiddenContent: @Composable ColumnScope.(page: Int) -> Unit
+    hiddenContentContainerColor: Color = Color.Black,
+    hiddenContentContentColor: Color = Color.White,
+    hiddenContent: @Composable ColumnScope.(page: Int) -> Unit,
 ) {
     var transformState by rememberSaveable { mutableStateOf(ExpandablePagerTransformState.INITIAL) }
 
@@ -220,8 +221,8 @@ fun ExpandableHorizontalPager(
                     },
                 shape = RoundedCornerShape(cornerSize),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.Black.copy(0.95f),
-                    contentColor = Color.White
+                    containerColor =  hiddenContentContainerColor,
+                    contentColor =  hiddenContentContentColor
                 )
             ) {
                 BoxWithConstraints(
