@@ -68,13 +68,13 @@ class MainActivity : ComponentActivity() {
                                 contentScale = ContentScale.FillHeight
                             )
                         },
-                        overMainContentExpanded = { page ->
+                        overMainContentCollapsed = { page ->
                             OverMainContent(
                                 title = "Details",
                                 imageVector = Icons.Default.KeyboardArrowDown
                             )
                         },
-                        overMainContentCollapsed = { page ->
+                        overMainContentExpanded = { page ->
                             OverMainContent(
                                 title = "Close",
                                 imageVector = Icons.Default.KeyboardArrowUp,

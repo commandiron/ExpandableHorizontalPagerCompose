@@ -45,8 +45,8 @@ fun ExpandableHorizontalPager(
     aspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
     mainContent: @Composable ColumnScope.(page: Int) -> Unit,
-    overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit,
+    overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit,
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
     hiddenContentContainerColor: Color = Color.Black,
     hiddenContentContentColor: Color = Color.White,
@@ -298,7 +298,7 @@ fun ExpandableHorizontalPager(
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
-                            overMainContentExpanded(page)
+                            overMainContentCollapsed(page)
                         }
                     }
                     Column() {
@@ -308,7 +308,7 @@ fun ExpandableHorizontalPager(
                             enter = fadeIn(tween(durationMillis)),
                             exit = fadeOut(tween(durationMillis))
                         ) {
-                            overMainContentCollapsed(page)
+                            overMainContentExpanded(page)
                         }
                     }
                 }
