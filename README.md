@@ -66,6 +66,6 @@ dependencyResolutionManagement {
 ```groovy
 dependencies {
         implementation "com.google.accompanist:accompanist-pager:0.26.5-rc"
-        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.4'
+        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.8'
 }
 ```
