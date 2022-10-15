@@ -87,9 +87,7 @@ class MainActivity : ComponentActivity() {
                                 overview = films[page].overview
                             )
                         },
-                        onTransform = { isExpanded ->
-                            println(isExpanded)
-                        }
+                        onTransform = { isExpanded -> }
                     )
                 }
             }
