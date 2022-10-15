@@ -221,7 +221,15 @@ fun ExpandableHorizontalPager(
                                 )
                             }
                         }
-                    },
+                    }
+                    .draggable(
+                        orientation = Orientation.Vertical,
+                        state = rememberDraggableState {},
+                        onDragStarted = {
+                            onTransform(!isExpanded)
+                            expand(this@BoxWithConstraints.maxHeight)
+                        }
+                    ),
                 shape = RoundedCornerShape(cornerSize),
                 colors = CardDefaults.cardColors(
                     containerColor =  hiddenContentContainerColor,
@@ -229,15 +237,6 @@ fun ExpandableHorizontalPager(
                 )
             ) {
                 BoxWithConstraints(
-                    modifier = Modifier
-                        .draggable(
-                            orientation = Orientation.Vertical,
-                            state = rememberDraggableState {},
-                            onDragStarted = {
-                                onTransform(!isExpanded)
-                                expand(this@BoxWithConstraints.maxHeight)
-                            }
-                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Column() {
