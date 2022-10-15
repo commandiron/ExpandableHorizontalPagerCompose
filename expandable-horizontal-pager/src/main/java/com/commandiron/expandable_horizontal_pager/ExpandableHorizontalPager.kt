@@ -44,7 +44,7 @@ fun ExpandableHorizontalPager(
     targetWidth: Dp = 300.dp,
     aspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
-    mainContent: @Composable ColumnScope.(page: Int) -> Unit,
+    mainContent: @Composable ColumnScope.(page: Int, isExpanded: Boolean) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit = {},
     overMainContentExpanded: @Composable ColumnScope.(page: Int) -> Unit = {},
     hiddenContentBoxHeight: Dp = Dp.Unspecified,
@@ -297,7 +297,7 @@ fun ExpandableHorizontalPager(
             ) {
                 Box() {
                     Column() {
-                        mainContent(page)
+                        mainContent(page, isExpanded)
                     }
                     Column() {
                         AnimatedVisibility(

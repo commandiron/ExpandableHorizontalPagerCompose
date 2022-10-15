@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         initialHorizontalPadding = 64.dp,
                         initialWidth = 240.dp,
                         targetWidth = maxWidth,
-                        mainContent = { page ->
+                        mainContent = { page, isExpanded ->
                             AsyncImage(
                                 modifier = Modifier.fillMaxSize(),
                                 model = ImageRequest.Builder(LocalContext.current)
