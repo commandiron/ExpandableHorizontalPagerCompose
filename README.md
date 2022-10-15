@@ -9,40 +9,48 @@ Add Expandable Content (Image etc.) Horizontal Pager in Android Jetpack Compose.
 ## Usage
 
 ```kotlin
-ExpandableHorizontalPager(
-    count = films.size,
-    initialHorizontalPadding = 64.dp,
-    initialWidth = 240.dp,
-    targetWidth = maxWidth,
-    mainContent = { page ->
-        AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(films[page].imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight
-        )
-    },
-    overMainContentExpanded = { page ->
-        OverMainContent(
-            title = "Details",
-            imageVector = Icons.Default.KeyboardArrowDown
-        )
-    },
-    overMainContentCollapsed = { page ->
-        OverMainContent(
-            title = "Close",
-            imageVector = Icons.Default.KeyboardArrowUp,
-            iconOnTop = true
-        )
-    },
-    HiddenContent(
-        title = films[page].title,
-        overview = films[page].overview
+BoxWithConstraints(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+) {
+    ExpandableHorizontalPager(
+        count = films.size,
+        initialHorizontalPadding = 64.dp,
+        initialWidth = 240.dp,
+        targetWidth = maxWidth,
+        mainContent = { page, isExpanded ->
+            AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(films[page].imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight
+            )
+        },
+        overMainContentCollapsed = { page ->
+            OverMainContent(
+                title = "Details",
+                imageVector = Icons.Default.KeyboardArrowDown
+            )
+        },
+        overMainContentExpanded = { page ->
+            OverMainContent(
+                title = "Close",
+                imageVector = Icons.Default.KeyboardArrowUp,
+                iconOnTop = true
+            )
+        },
+        hiddenContent = { page ->
+            HiddenContent(
+                title = films[page].title,
+                overview = films[page].overview
+            )
+        },
+        onTransform = { isExpanded -> }
     )
-)
+}
 ```
 
 
