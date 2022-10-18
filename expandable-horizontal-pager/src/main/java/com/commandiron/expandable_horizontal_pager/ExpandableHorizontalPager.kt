@@ -2,6 +2,7 @@ package com.commandiron.expandable_horizontal_pager
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,7 +45,8 @@ fun ExpandableHorizontalPager(
     userScrollEnabled: Boolean = true,
     initialWidth: Dp = 200.dp,
     targetWidth: Dp = 300.dp,
-    aspectRatio: Float = 2 / 3f,
+    initialAspectRatio: Float = 2 / 3f,
+    targetAspectRatio: Float = 2 / 3f,
     durationMillis: Int = 400,
     mainContent: @Composable ColumnScope.(page: Int, isExpanded: Boolean) -> Unit,
     overMainContentCollapsed: @Composable ColumnScope.(page: Int) -> Unit = {},
@@ -96,6 +98,14 @@ fun ExpandableHorizontalPager(
         }
     )
 
+    var aspectRatioState by remember { mutableStateOf(initialAspectRatio) }
+    val aspectRatio by animateFloatAsState(
+        targetValue = aspectRatioState,
+        animationSpec = tween(
+            durationMillis = durationMillis
+        )
+    )
+
     var boxHeightState by remember { mutableStateOf(0.dp) }
     val boxHeight by animateDpAsState(
         targetValue = boxHeightState,
@@ -140,18 +150,21 @@ fun ExpandableHorizontalPager(
             horizontalPaddingState = targetHorizontalPadding
 
             contentWidthState = targetWidth
-            contentOffSetYState = -((maxHeight - (contentWidthState * 1 / aspectRatio)) / 2)
+
+            aspectRatioState = targetAspectRatio
+
+            contentOffSetYState = -((maxHeight - (contentWidthState * 1 / targetAspectRatio)) / 2)
 
             boxHeightState = if(hiddenContentBoxHeight == Dp.Unspecified) {
-                maxHeight - targetWidth * 1 / aspectRatio
+                maxHeight - targetWidth * 1 / targetAspectRatio
             } else {
                 hiddenContentBoxHeight
             }
 
             boxOffSetYState = if(hiddenContentBoxHeight == Dp.Unspecified) {
-                (maxHeight - (maxHeight - targetWidth * 1 / aspectRatio)) / 2
+                (maxHeight - (maxHeight - targetWidth * 1 / targetAspectRatio)) / 2
             } else {
-                - maxHeight / 2 + hiddenContentBoxHeight / 2 + targetWidth * 1 / aspectRatio
+                - maxHeight / 2 + hiddenContentBoxHeight / 2 + targetWidth * 1 / targetAspectRatio
             }
 
             cornerSizeState = 0.dp
@@ -162,6 +175,7 @@ fun ExpandableHorizontalPager(
             horizontalPaddingState = initialHorizontalPadding
 
             contentWidthState = initialWidth
+            aspectRatioState = initialAspectRatio
             contentOffSetYState = 0.dp
 
             boxHeightState = 0.dp
@@ -188,6 +202,7 @@ fun ExpandableHorizontalPager(
         ) {
             val isExpanded = transformState == ExpandablePagerTransformState.TARGET ||
                     transformState == ExpandablePagerTransformState.INITIAL_TO_TARGET
+
             Card(
                 modifier = Modifier
                     .width(contentWidth)
@@ -240,11 +255,11 @@ fun ExpandableHorizontalPager(
                     }
                 }
             }
+
             Card(
                 modifier = Modifier
                     .width(contentWidth)
                     .height(contentWidth * 1 / aspectRatio)
-                    .aspectRatio(aspectRatio)
                     .offset(
                         x = contentOffSetX,
                         y = contentOffSetY
